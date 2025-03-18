@@ -1,0 +1,46 @@
+<% layout("/layouts/boilerplate") -%>
+    <style>
+        .signup-form {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .signup-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .signup-form .form-control {
+            margin-bottom: 15px;
+        }
+
+        .signup-form .btn {
+            width: 100%;
+        }
+    </style>
+    <div class="container">
+        <div class="signup-form">
+            <h2>Sign Up</h2>
+            <form method="POST" action="/signup" class="needs-validation " novalidate>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter username"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password"
+                        placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-dark">Sign Up</button>
+            </form>
+        </div>
+    </div>

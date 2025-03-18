@@ -1,0 +1,229 @@
+<% layout("/layouts/boilerplate") -%>
+    <div id="filter">
+        <div class="filter" data-category="resorts">
+            <i class="fa-brands fa-fort-awesome"></i>
+            <p>Resort</p>
+        </div>
+        <div class="filter" data-category="mountains">
+            <i class="fa-solid fa-mountain-sun"></i>
+            <p>Mountain</p>
+        </div>
+        <div class="filter" data-category="beaches">
+            <i class="fa-solid fa-umbrella-beach"></i>
+            <p>Beach</p>
+        </div>
+        <div class="filter" data-category="camping">
+            <i class="fa-solid fa-tent-arrow-down-to-line"></i>
+            <p>Camping</p>
+        </div>
+    </div>
+
+    <script>
+        let filters = document.querySelectorAll(".filter").forEach((btn) => {
+            btn.addEventListener("click", async () => {
+                let category = btn.getAttribute("data-category");
+                try {
+                    const response = await fetch(`/listings/filter/${category}`);
+                    const listings = await response.json();
+                    updateListings(listings);
+                } catch (err) {
+                    req.flash("err", err);
+                }
+            });
+        });
+
+        function updateListings(listings) {
+            const listingGrid = document.querySelector(".listing-grid");
+            listingGrid.innerHTML = listings.map(listing => `
+                <a href="/listings/${listing._id}" class="card-link">
+                    <div class="card">
+                        <img src="${listing.image.url}" class="card-image" alt="listing image">
+                        <div class="card-content">
+                            <h3 class="card-title">${listing.title}</h3>
+                            <p class="card-price">${listing.price} ₹/night</p>
+                        </div>
+                    </div>
+                </a>
+            `).join('');
+        }
+    </script>
+
+    <div class="container ">
+        <div class="listing-grid listing-card ">
+            <% for (listing of allListings) { %>
+                <a href="/listings/<%=listing._id%>" class="card-link">
+                    <div class="card">
+                        <img src="<%=listing.image.url%>" class="card-image" alt="listing image">
+                        <div class="card-content">
+                            <h3 class="card-title">
+                                <%=listing.title%>
+                            </h3>
+                            <p class="card-price">
+                                <%=listing.price%> &#8377;/night
+                            </p>
+                        </div>
+                    </div>
+                </a>
+                <% } %>
+        </div>
+    </div>
+
+    <style>
+        /* Base Styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .listing-card {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            min-height: 400px;
+        }
+
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 15px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            margin: 0 0 10px;
+        }
+
+        .card-price {
+            font-size: 1rem;
+            color: #333;
+            margin: 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .listing-card {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+
+            .card-image {
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .listing-card {
+                grid-template-columns: 1fr;
+            }
+
+            .card-image {
+                height: 200px;
+            }
+        }
+
+        #filter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .filter {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 150px;
+            height: 150px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .filter:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .filter i {
+            font-size: 2.5rem;
+            color: #ff5a5f;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .filter p {
+            font-size: 1rem;
+            color: #333;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .filter:hover i,
+        .filter:hover p {
+            color: #ff5a5f;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .filter {
+                width: 120px;
+                height: 120px;
+            }
+
+            .filter i {
+                font-size: 2rem;
+            }
+
+            .filter p {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #filter {
+                flex-direction: column;
+            }
+
+            .filter {
+                width: 100%;
+                height: 80px;
+                flex-direction: row;
+                justify-content: flex-start;
+                padding-left: 20px;
+            }
+
+            .filter i {
+                margin-bottom: 0;
+                margin-right: 10px;
+            }
+        }
+    </style>
