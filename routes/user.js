@@ -22,7 +22,7 @@ router.post(
 );
 
 //login route
-router.get("/login", (reqw, res) => {
+router.get("/login", (req, res) => {
   res.render("users/login.ejs");
 });
 
