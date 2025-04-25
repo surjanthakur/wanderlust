@@ -23,7 +23,7 @@ module.exports.showRoute = async (req, res) => {
 //create route
 module.exports.createRoute = async (req, res) => {
   let url = req.file.path;
-  let filename = req.flie;
+  let filename = req.file;
   let newListing = new Listing(req.body.listing);
   newListing.owner = req.user._id;
   newListing.image = { url, filename };
