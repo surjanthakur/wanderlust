@@ -19,7 +19,7 @@ const initDb = async () => {
 
   let newdata = initData.data.map((obj) => ({
     ...obj,
-    owner: "67d2c671bace8865f1aa6d9e",
+    owner: "680c5e7083ae11ac9db6d741",
     category: category[Math.floor(Math.random() * category.length)],
   }));
   await Listing.insertMany(newdata);
