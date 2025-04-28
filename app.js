@@ -17,7 +17,7 @@ const LocalStrategy = require("passport-local");
 
 
 const sessionOption = {
-  secret: "mysecretkayofprojectairbnb",
+  secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -26,6 +26,13 @@ const sessionOption = {
     httpOnly: true,
   },
 };
+
+
+mongoose.connect("mongodb://127.0.0.1:27017/zerodha")
+  .then(() => console.log("database is connected !"))
+  .catch((err) => {
+    console.log(err)
+  });
 
 const listings = require("./routes/listing");
 const reviews = require("./routes/review");
@@ -39,15 +46,7 @@ app.use(methodOverride("_method"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
-main()
-  .then(() => {
-    console.log("db is working");
-  })
-  .catch((err) => console.log(err));
 
-async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
-}
 
 //express session
 app.use(session(sessionOption));
