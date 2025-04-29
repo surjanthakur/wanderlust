@@ -8,10 +8,10 @@
                         style="max-height: 400px; object-fit: cover;">
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">
+                    <h5 class="card-title mt-2">
                         <%= listing.title %>
                     </h5>
-                    <p class="card-text">
+                    <p class="card-text mt-3">
                         <b>about :</b>
                         <%= listing.description %>
                     </p>
@@ -92,107 +92,152 @@
                                                 </form>
                                             </div>
                                             <% } %>
-
-
                                                 <%}%>
-
-                                                    <!-- Custom CSS for Star Rating -->
-                                                    <style>
-                                                        .star-rating .star {
-                                                            font-size: 2rem;
-                                                            color: #ddd;
-                                                            cursor: pointer;
-                                                            transition: color 0.2s;
-                                                            /
-                                                        }
-
-                                                        .star-rating .star:hover,
-                                                        .star-rating .star.active {
-                                                            color: #ffc107;
-
-                                                            /* Yellow color for selected stars */
-                                                        }
-
-                                                        .review-card {
-                                                            background-color: #f8f5f5;
-                                                            border-radius: 10px;
-                                                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                                                            padding: 20px;
-                                                            margin-bottom: 20px;
-                                                            transition: transform 0.2s ease, box-shadow 0.2s ease;
-                                                        }
-
-                                                        .review-card:hover {
-                                                            transform: translateY(-5px);
-                                                            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                                                        }
-
-                                                        .review-header {
-                                                            display: flex;
-                                                            justify-content: space-between;
-                                                            align-items: center;
-                                                            margin-bottom: 15px;
-                                                        }
-
-                                                        .review-author {
-                                                            font-size: 18px;
-                                                            font-weight: bold;
-                                                            color: #333333;
-                                                            margin: 0;
-                                                        }
-
-                                                        .review-rating {
-                                                            color: #ffd700;
-                                                            /* Gold color for stars */
-                                                        }
-
-                                                        .star {
-                                                            font-size: 30px;
-                                                        }
-
-                                                        .review-comment {
-                                                            font-size: 16px;
-                                                            color: #000000;
-                                                            margin: 0;
-                                                        }
-                                                    </style>
-
-                                                    <!-- JavaScript for Interactive Star Rating -->
-                                                    <script>
-                                                        document.addEventListener('DOMContentLoaded', function () {
-                                                            const stars = document.querySelectorAll('.star-rating .star');
-                                                            const ratingInput = document.getElementById('rating-value');
-
-                                                            stars.forEach(star => {
-                                                                star.addEventListener('click', function () {
-                                                                    const value = this.getAttribute('data-value');
-                                                                    ratingInput.value = value;
-
-                                                                    // Highlight selected stars
-                                                                    stars.forEach(s => s.classList.remove('active'));
-                                                                    this.classList.add('active');
-                                                                    let currentStar = this;
-                                                                    while (currentStar = currentStar.previousElementSibling) {
-                                                                        currentStar.classList.add('active');
-                                                                    }
-                                                                });
-
-                                                                star.addEventListener('mouseover', function () {
-                                                                    const value = this.getAttribute('data-value');
-                                                                    stars.forEach(s => s.classList.remove('hover'));
-                                                                    this.classList.add('hover');
-                                                                    let currentStar = this;
-                                                                    while (currentStar = currentStar.previousElementSibling) {
-                                                                        currentStar.classList.add('hover');
-                                                                    }
-                                                                });
-
-                                                                star.addEventListener('mouseout', function () {
-                                                                    stars.forEach(s => s.classList.remove('hover'));
-                                                                });
-                                                            });
-                                                        });
-                                                    </script>
+                </div>
+                <!-- map implimentation -->
+                <div class="col-md-6 offset-2 mb-4">
+                    <h3 class="mb-2">Where you be</h3>
+                    <div id="map" style="height: 400px; width:500px ;"></div>
                 </div>
             </div>
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const map = L.map('map').setView([20.5937, 78.9629], 13);
+
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 5,
+                }).addTo(map);
+
+                // Add Geocoder control
+                L.Control.geocoder({
+                    defaultMarkGeocode: true
+                }).addTo(map);
+
+                L.marker([20.5937, 78.9629]).addTo(map)
+                    .bindPopup('where you be')
+                    .openPopup();
+
+                const listingLocation = "<%= listing.location %>";
+                if (listingLocation) {
+                    L.Control.Geocoder.nominatim().geocode(listingLocation, function (results) {
+                        if (results.length > 0) {
+                            const latlng = results[0].center;
+                            map.setView(latlng, 13);
+                            L.marker(latlng).addTo(map)
+                                .bindPopup(listingLocation)
+                                .openPopup();
+                        }
+                    });
+                }
+
+                const popup = L.popup();
+                function onMapClick(e) {
+                    popup
+                        .setLatLng(e.latlng)
+                        .setContent("location " + e.latlng.toString())
+                        .openOn(map);
+                }
+
+                map.on('click', onMapClick);
+            });
+        </script>
+
+        <!-- Custom CSS for Star Rating -->
+        <style>
+            .star-rating .star {
+                font-size: 2rem;
+                color: #ddd;
+                cursor: pointer;
+                transition: color 0.2s;
+                /
+            }
+
+            .star-rating .star:hover,
+            .star-rating .star.active {
+                color: #ffc107;
+
+                /* Yellow color for selected stars */
+            }
+
+            .review-card {
+                background-color: #f8f5f5;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                margin-bottom: 20px;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            .review-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            }
+
+            .review-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 15px;
+            }
+
+            .review-author {
+                font-size: 18px;
+                font-weight: bold;
+                color: #333333;
+                margin: 0;
+            }
+
+            .review-rating {
+                color: #ffd700;
+                /* Gold color for stars */
+            }
+
+            .star {
+                font-size: 30px;
+            }
+
+            .review-comment {
+                font-size: 16px;
+                color: #000000;
+                margin: 0;
+            }
+        </style>
+
+        <!-- JavaScript for Interactive Star Rating -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const stars = document.querySelectorAll('.star-rating .star');
+                const ratingInput = document.getElementById('rating-value');
+
+                stars.forEach(star => {
+                    star.addEventListener('click', function () {
+                        const value = this.getAttribute('data-value');
+                        ratingInput.value = value;
+
+                        // Highlight selected stars
+                        stars.forEach(s => s.classList.remove('active'));
+                        this.classList.add('active');
+                        let currentStar = this;
+                        while (currentStar = currentStar.previousElementSibling) {
+                            currentStar.classList.add('active');
+                        }
+                    });
+
+                    star.addEventListener('mouseover', function () {
+                        const value = this.getAttribute('data-value');
+                        stars.forEach(s => s.classList.remove('hover'));
+                        this.classList.add('hover');
+                        let currentStar = this;
+                        while (currentStar = currentStar.previousElementSibling) {
+                            currentStar.classList.add('hover');
+                        }
+                    });
+
+                    star.addEventListener('mouseout', function () {
+                        stars.forEach(s => s.classList.remove('hover'));
+                    });
+                });
+            });
+        </script>
