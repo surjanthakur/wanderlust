@@ -1,8 +1,10 @@
 
 document.addEventListener('DOMContentLoaded', function () {
-    const map = L.map('map').setView([20.5937, 78.9629], 13);
+    const map = L.map('map').setView([40.776643, -73.968782], 13);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 20,
+        minZoom: 1
     }).addTo(map);
 
     // Add Geocoder control
@@ -10,8 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
         defaultMarkGeocode: true
     }).addTo(map);
 
-    L.marker([20.5937, 78.9629]).addTo(map)
-        .bindPopup('where you be')
+    L.marker([40.776643, -73.968782]).addTo(map)
+        .bindPopup('search where you be ')
         .openPopup();
 
     const popup = L.popup();
