@@ -36,7 +36,6 @@ router.post(
   passport.authenticate("local", {
     failureRedirect: "/login",
     failureFlash: true,
-    failureMessage: "Invalid Username or Password",
   }),
   wrapAsync(async (req, res) => {
     req.flash("success", "Welcome back!");
